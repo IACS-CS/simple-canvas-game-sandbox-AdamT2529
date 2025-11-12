@@ -1,26 +1,40 @@
 import "./style.css";
 
-import { GameInterface } from 'simple-canvas-library';
+import { GameInterface } from "simple-canvas-library";
 
 let gi = new GameInterface();
 
-gi.addDrawing(
-  function ({ ctx, width, height, elapsed }) {
-    ctx.beginPath();
-    ctx.strokeStyle = "rgba(1, 228, 249, 1)";
-    ctx.lineWidth = 5;
-    let x = 30 + ((elapsed / 10)) % width /2); 
-    let y = 60 + ((elapsed /10)) % height /2);
-for (let i = 0; i < 60; i++) {
-  ctx.moveTo(x, y);
-  ctx.lineTo(x, y + 10);
-  ctx.lineTo(x + 20, y + 10);
-  x = x + 20;
-  y = y + 10;
-}
+let top = 0;
+let left = 0;
 
-ctx.stroke();
+gi.addDrawing(function ({ ctx, width, height, stepTime }) {
+  ctx.strokeStyle = 'rgba(0, 247, 255, 1)';
+  ctx.beginPath();
+  ctx.lineWidth = 5;
+  let x = left;
+  let y = top;
+  // Make a staircase pattern across the screen
+  for (let i = 0; i < 60; i++) {
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + 10);
+    ctx.lineTo(x + 20, y + 10);
+    x += 20;
 
+    y += 10;
+  }
+
+  ctx.stroke();
+  // Update staircase position for next frame
+  top += stepTime * 0.05;
+  left += stepTime * 0.1;
+
+  if(top > height) {
+    top = 0;
+  }
+  if (left > width) {
+    left = 0;
+  }
+
+});
+ 
 gi.run();
-
-
